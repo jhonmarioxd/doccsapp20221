@@ -6,7 +6,7 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+//import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Client;
@@ -27,7 +27,7 @@ public class ClientList extends javax.swing.JFrame {
     }
 
     public void setModelo() {
-        String[] header = {"Id", "Full Name", "Address", "Email", "Phone", "State", "Type", "Notes"};
+        String[] header = {"Id", "Full Name", "Address", "Email", "Phone", "State", "Type", "Notes", "Organization"};
         dtmClients.setColumnIdentifiers(header);
         clientTbl.setModel(dtmClients);
     }
@@ -102,6 +102,11 @@ public class ClientList extends javax.swing.JFrame {
         });
 
         clientUpdateBtn.setText("Update");
+        clientUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientUpdateBtnActionPerformed(evt);
+            }
+        });
 
         clientCloseBtn.setText("Close");
         clientCloseBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +122,7 @@ public class ClientList extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addComponent(clientDeleteBtn)
-                .addGap(104, 104, 104)
+                .addGap(153, 153, 153)
                 .addComponent(clientUpdateBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(clientCloseBtn)
@@ -164,7 +169,7 @@ public class ClientList extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -176,7 +181,7 @@ public class ClientList extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         pack();
@@ -187,6 +192,7 @@ public class ClientList extends javax.swing.JFrame {
         //Se traen los datos de la BD
         try {
             listClient = (ArrayList<Client>) clientDAOImp.listClients();
+            Collections.sort(listClient);
             Object[] data = new Object[dtmClients.getColumnCount()];
             int i = 1;
             dtmClients.setRowCount(0);
@@ -199,6 +205,7 @@ public class ClientList extends javax.swing.JFrame {
                 data[5] = client.isState();
                 data[6] = client.getType();
                 data[7] = client.getNotes();
+                data[8] = client.getOrg().getComercialName();
                 i++;
                 dtmClients.addRow(data);
             }
@@ -236,6 +243,7 @@ public class ClientList extends javax.swing.JFrame {
             }
             try {
                 var clients = clientDAOImp.listClients();
+                Collections.sort(clients);
                 Object[] data = new Object[dtmClients.getColumnCount()];
                 int i = 1;
                 dtmClients.setRowCount(0);
@@ -248,6 +256,7 @@ public class ClientList extends javax.swing.JFrame {
                     data[5] = c.isState();
                     data[6] = c.getType();
                     data[7] = c.getNotes();
+                    data[8] = client.getOrg().getComercialName();
                     i++;
                     dtmClients.addRow(data);
                 }
@@ -258,8 +267,16 @@ public class ClientList extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_clientDeleteBtnActionPerformed
 
-    
-    public static void main(String args[]) {
+    private void clientUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientUpdateBtnActionPerformed
+        // TODO add your handling code here:
+        int index = clientTbl.getSelectedRow();
+        Client client = listClient.get(index);
+        System.out.println(client.toString());
+        ClientEdit clientEdit=new ClientEdit(client,1);
+        clientEdit.setVisible(true);
+    }//GEN-LAST:event_clientUpdateBtnActionPerformed
+
+        public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

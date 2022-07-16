@@ -4,13 +4,14 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Usuario
  */
-public class Document {
+public class Document implements Serializable, Comparable{
     private Long id;
     private String type;//Digital or Physical
     private int numPages;
@@ -65,7 +66,11 @@ public class Document {
         return "Document{" + "id=" + id + ", type=" + type + ", numPages=" + numPages + ", dateRecord=" + dateRecord + '}';
     }
     
-    
+    @Override
+    public int compareTo(Object o) {
+        Document doc = (Document) o;
+        return this.getId().compareTo(doc.getId());
+    }
     
     
 }

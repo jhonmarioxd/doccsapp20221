@@ -3,6 +3,7 @@ package persistence;
 //SANTIAGO JOSÉ BARBOSA RIVAS        CODIGO : 20212200802
 //JONATHAN FELIPE SANCHÉZ MATHEUS    CÓDIGO : 20212200869
 
+import util.MyObjectOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;

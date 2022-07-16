@@ -4,7 +4,7 @@ package model;
 //SANTIAGO JOSÉ BARBOSA RIVAS        CODIGO : 20212200802
 //JONATHAN FELIPE SANCHÉZ MATHEUS    CÓDIGO : 20212200869
 
-public class Letter extends lettersperson {
+public class Letter extends Lettersperson {
     private boolean state;
     private String type;
     private String notes;

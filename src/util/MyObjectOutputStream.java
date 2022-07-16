@@ -1,12 +1,13 @@
 
-package persistence;
+package util;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 
-class MyObjectOutputStream extends ObjectOutputStream {
+public class MyObjectOutputStream extends ObjectOutputStream {
  
     // Constructor of this class
     // 1. Default
@@ -22,6 +23,10 @@ class MyObjectOutputStream extends ObjectOutputStream {
     MyObjectOutputStream(OutputStream o) throws IOException
     {
         super(o);
+    }
+
+    public MyObjectOutputStream(FileOutputStream fileOutput) throws IOException {
+        super(fileOutput);
     }
  
     // Method of this class

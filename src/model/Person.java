@@ -4,7 +4,7 @@ package model;
 import java.io.Serializable;
 
 
-public class Person implements Serializable{
+public class Person implements Serializable, Comparable{
     private Long id;
     private String fullName;
     private String address;
@@ -65,6 +65,12 @@ public class Person implements Serializable{
     @Override
     public String toString() {
         return "Person{" + "id=" + id + ", fullName=" + fullName + ", address=" + address + ", phone=" + phone + ", email=" + email + '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Person person = (Person) o;
+        return this.getFullName().compareTo(person.getFullName());
     }
     
     

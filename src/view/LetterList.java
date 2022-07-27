@@ -6,7 +6,7 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+//import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Letter;
@@ -25,7 +25,7 @@ public class LetterList extends javax.swing.JFrame {
     }
 
     public void setModelo() {
-        String[] header = {"Id", "fullNameorbusiness", "Recipientsname", "Date", "address", "affair", "Phone" , "Email", "PostalCode", "place", "firm" , "State", "Type", "Notes"}; 
+        String[] header = {"Id", "FullNameorbusiness", "Recipientsname", "Date", "Address", "Affair", "Phone" , "Email", "PostalCode", "Place", "Firm","Source","Country", "State", "Type", "Notes","Organization"}; 
     dtmLetters.setColumnIdentifiers(header);
         letterTbl.setModel(dtmLetters);
     }
@@ -159,6 +159,11 @@ public class LetterList extends javax.swing.JFrame {
 
         letterUpdateBtn.setBackground(new java.awt.Color(51, 51, 255));
         letterUpdateBtn.setText("Update");
+        letterUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                letterUpdateBtnActionPerformed(evt);
+            }
+        });
 
         letterDeleteBtn.setBackground(new java.awt.Color(255, 51, 51));
         letterDeleteBtn.setText("Delete");
@@ -198,11 +203,12 @@ public class LetterList extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -218,28 +224,32 @@ public class LetterList extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LetterDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LetterDataActionPerformed
-        LetterDAOlmp letterDAOlmp = new LetterDAOlmp();
+        LetterDAOlmp LetterDAOlmp = new LetterDAOlmp();
        
         try {
-            listLetter = (ArrayList<Letter>) letterDAOlmp.listLetter();
+            listLetter = (ArrayList<Letter>) LetterDAOlmp.listLetter();
+             Collections.sort(listLetter);
             Object[] data = new Object[dtmLetters.getColumnCount()];
             int i = 1;
             dtmLetters.setRowCount(0);
-            for (Letter letter : listLetter) {
-                data[0] = letter.getId();
-                data[1] = letter.getFullNameorbusiness();
-                data[2] = letter.getRecipientsname();
-                data[3] = letter.getDate();
-                data[4] = letter.getAddress();
-                data[5] = letter.getAffair();
-                data[6] = letter.getPhone();
-                data[7] = letter.getEmail();
-                data[8] = letter.getPostalCode();
-                data[9] = letter.getPlace();
-                data[10] = letter.getFirm();
-                data[11] = letter.isState();
-                data[12] = letter.getType();
-                data[13] = letter.getNotes();
+            for (Letter Letter : listLetter) {
+                data[0] = Letter.getId();
+                data[1] = Letter.getFullNameorbusiness();
+                data[2] = Letter.getRecipientsname();
+                data[3] = Letter.getDate();
+                data[4] = Letter.getAddress();
+                data[5] = Letter.getAffair();
+                data[6] = Letter.getPhone();
+                data[7] = Letter.getEmail();
+                data[8] = Letter.getPostalCode();
+                data[9] = Letter.getPlace();
+                data[10] = Letter.getFirm();
+                data[11] = Letter.getSource();
+                data[12] = Letter.getCountry();
+                data[13] = Letter.isState();
+                data[14] = Letter.getType();
+                data[15] = Letter.getNotes();
+                data[16] = Letter.getOrg().getComercialName();
                 i++;
                 dtmLetters.addRow(data);
             }
@@ -255,14 +265,14 @@ public class LetterList extends javax.swing.JFrame {
 
     private void letterDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_letterDeleteBtnActionPerformed
          int index = letterTbl.getSelectedRow();
-        Letter letter = listLetter.get(index);
+        Letter Letter = listLetter.get(index);
         LetterDAOlmp LetterDAOlmp = new LetterDAOlmp();
         int rta = JOptionPane.showConfirmDialog(null, "Do you want to delete the record?",
                 "Remove Client Registry", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE);
         if (rta == 0) {
             try {
-                LetterDAOlmp.deleteLetter(letter);
+                LetterDAOlmp.deleteLetter(Letter);
                 JOptionPane.showMessageDialog(null, "Deleted Client Record");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Operation Not Performed");
@@ -280,20 +290,23 @@ public class LetterList extends javax.swing.JFrame {
                 int i = 1;
                 dtmLetters.setRowCount(0);
                 for (Letter c : letters) {
-                data[0] = letter.getId();
-                data[1] = letter.getFullNameorbusiness();
-                data[2] = letter.getRecipientsname();
-                data[3] = letter.getDate();
-                data[4] = letter.getAddress();
-                data[5] = letter.getAffair();
-                data[6] = letter.getEmail();
-                data[7] = letter.getPhone();
-                data[8] = letter.getFirm();
-                data[9] = letter.getPostalCode();
-                data[10] = letter.getPlace();
-                data[11] = letter.isState();
-                data[12] = letter.getType();
-                data[13] = letter.getNotes();
+                data[0] = Letter.getId();
+                data[1] = Letter.getFullNameorbusiness();
+                data[2] = Letter.getRecipientsname();
+                data[3] = Letter.getDate();
+                data[4] = Letter.getAddress();
+                data[5] = Letter.getAffair();
+                data[6] = Letter.getEmail();
+                data[7] = Letter.getPhone();          
+                data[8] = Letter.getPostalCode();
+                data[9] = Letter.getPlace();
+                data[10] = Letter.getFirm();
+                data[11] = Letter.getSource();
+                data[12] = Letter.getCountry();
+                data[13] = Letter.isState();
+                data[14] = Letter.getType();
+                data[15] = Letter.getNotes();
+                data[16] = Letter.getOrg().getComercialName();
                 i++;
                     dtmLetters.addRow(data);
                 }
@@ -303,6 +316,14 @@ public class LetterList extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_letterDeleteBtnActionPerformed
+
+    private void letterUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_letterUpdateBtnActionPerformed
+         int index = letterTbl.getSelectedRow();
+        Letter letter = listLetter.get(index);
+        System.out.println(letter.toString());
+        LetterEdit letterEdit=new LetterEdit(letter,1);
+        letterEdit.setVisible(true);
+    }//GEN-LAST:event_letterUpdateBtnActionPerformed
 
     @SuppressWarnings("unchecked")
     

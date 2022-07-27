@@ -6,7 +6,7 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+//import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Confidential;
@@ -23,7 +23,7 @@ ArrayList<Confidential> listConfidential = new ArrayList();
     }
     
 public void setModelo() {
-        String[] header = {"Id", "Fullname", "Password", "phone", "Email", "Date", "Employees salary", "Tax returns" , "Insurance records", "Bank cards", "Financial institutions","State", "Type" , "Notes"}; 
+        String[] header = {"Id", "Password", "Comercial Name", "phone", "Email", "Date","Employee", "salary", "Insurance records" , "Bank cards", "Financial institutions", "Country", "City", "Tax returns","State", "Type" , "Notes","Organization"}; 
     dtmConfidentials.setColumnIdentifiers(header);
         confidentialTbl.setModel(dtmConfidentials);
     }
@@ -34,7 +34,7 @@ public void setModelo() {
         ConfidentialData = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        confidentialModeLbl = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         confidentialTbl = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -62,9 +62,9 @@ public void setModelo() {
         jLabel1.setFont(new java.awt.Font("Algerian", 1, 24)); // NOI18N
         jLabel1.setText("CONFIDENTIAL");
 
-        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel2.setText("List Mode");
+        confidentialModeLbl.setBackground(new java.awt.Color(255, 255, 255));
+        confidentialModeLbl.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        confidentialModeLbl.setText("List Mode");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -77,7 +77,7 @@ public void setModelo() {
                         .addComponent(jLabel1))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
-                        .addComponent(jLabel2)))
+                        .addComponent(confidentialModeLbl)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -86,7 +86,7 @@ public void setModelo() {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(confidentialModeLbl)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -140,6 +140,11 @@ public void setModelo() {
 
         confidentialUpdateBtn.setBackground(new java.awt.Color(51, 51, 255));
         confidentialUpdateBtn.setText("Update");
+        confidentialUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confidentialUpdateBtnActionPerformed(evt);
+            }
+        });
 
         confidentialDeleteBtn.setBackground(new java.awt.Color(255, 51, 51));
         confidentialDeleteBtn.setText("Delete");
@@ -199,6 +204,7 @@ public void setModelo() {
         //Se traen los datos de la BD
         try {
             listConfidential = (ArrayList<Confidential>) confidentialDAOlmp.listConfidential();
+            Collections.sort(listConfidential);
             Object[] data = new Object[dtmConfidentials.getColumnCount()];
             int i = 1;
             dtmConfidentials.setRowCount(0);
@@ -209,14 +215,18 @@ public void setModelo() {
                 data[3] = confidential.getPhone();
                 data[4] = confidential.getEmail();
                 data[5] = confidential.getDate();
-                data[6] = confidential.getEmployeessalary();
-                data[7] = confidential.getTaxreturns();
-                data[8] = confidential.getInsurancerecords();
-                data[9] = confidential.getBankcards();
-                data[10] = confidential.getFinancialinstitutions();
-                data[11] = confidential.isState();
-                data[12] = confidential.getType();
-                data[13] = confidential.getNotes();
+                data[6] = confidential.getSource();
+                data[7] = confidential.getEmployeessalary();
+                data[8] = confidential.getTaxreturns();
+                data[9] = confidential.getInsurancerecords();
+                data[10] = confidential.getBankcards();
+                data[11] = confidential.getFinancialinstitutions();
+                data[12] = confidential.getCountry();
+                data[13] = confidential.getCity();
+                data[14] = confidential.isState();
+                data[15] = confidential.getType();
+                data[16] = confidential.getNotes();
+                data[17] = confidential.getOrg().getComercialName();
                 i++;
                 dtmConfidentials.addRow(data);
             }
@@ -233,6 +243,7 @@ public void setModelo() {
     private void confidentialDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confidentialDeleteBtnActionPerformed
         int index = confidentialTbl.getSelectedRow();
         Confidential confidential = listConfidential.get(index);
+        //JOptionPane.showMessageDialog(null, Confidential.getId());
         ConfidentialDAOlmp ConfidentialDAOlmp = new ConfidentialDAOlmp();
         int rta = JOptionPane.showConfirmDialog(null, "Do you want to delete the record?",
             "Remove Client Registry", JOptionPane.OK_CANCEL_OPTION,
@@ -240,7 +251,7 @@ public void setModelo() {
         if (rta == 0) {
             try {
                 ConfidentialDAOlmp.deleteConfidential(confidential);
-                JOptionPane.showMessageDialog(null, "Deleted Client Record");
+                JOptionPane.showMessageDialog(null, "Deleted Confidential Record");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Operation Not Performed");
             }
@@ -257,20 +268,24 @@ public void setModelo() {
                 int i = 1;
                 dtmConfidentials.setRowCount(0);
                 for (Confidential c : confidentials) {
-                    data[0] = confidential.getId();
-                    data[1] = confidential.getFullName();
-                    data[2] = confidential.getPassword();
-                    data[3] = confidential.getPhone();
-                    data[4] = confidential.getEmail();
-                    data[5] = confidential.getDate();
-                    data[6] = confidential.getEmployeessalary();
-                    data[7] = confidential.getTaxreturns();
-                    data[8] = confidential.getInsurancerecords();
-                    data[9] = confidential.getBankcards();
-                    data[10] = confidential.getFinancialinstitutions();
-                    data[11] = confidential.isState();
-                    data[12] = confidential.getType();
-                    data[13] = confidential.getNotes();
+                   data[0] = confidential.getId();
+                data[1] = confidential.getFullName();
+                data[2] = confidential.getPassword();
+                data[3] = confidential.getPhone();
+                data[4] = confidential.getEmail();
+                data[5] = confidential.getDate();
+                data[6] = confidential.getSource();
+                data[7] = confidential.getEmployeessalary();
+                data[8] = confidential.getTaxreturns();
+                data[9] = confidential.getInsurancerecords();
+                data[10] = confidential.getBankcards();
+                data[11] = confidential.getFinancialinstitutions();
+                data[12] = confidential.getCountry();
+                data[13] = confidential.getCity();
+                data[14] = confidential.isState();
+                data[15] = confidential.getType();
+                data[16] = confidential.getNotes();
+                data[17] = confidential.getOrg().getComercialName();
                     i++;
                     dtmConfidentials.addRow(data);
                 }
@@ -280,6 +295,14 @@ public void setModelo() {
             }
         }
     }//GEN-LAST:event_confidentialDeleteBtnActionPerformed
+
+    private void confidentialUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confidentialUpdateBtnActionPerformed
+        int index = confidentialTbl.getSelectedRow();
+        Confidential confidential = listConfidential.get(index);
+        System.out.println(confidential.toString());
+        ConfidentialEdit confidentialEdit=new ConfidentialEdit(confidential,1);
+        confidentialEdit.setVisible(true);
+    }//GEN-LAST:event_confidentialUpdateBtnActionPerformed
 
     @SuppressWarnings("unchecked")
     public static void main(String args[]) {
@@ -318,10 +341,10 @@ public void setModelo() {
     private javax.swing.JButton ConfidentialData;
     private javax.swing.JButton confidentialCloseBtn;
     private javax.swing.JButton confidentialDeleteBtn;
+    private javax.swing.JLabel confidentialModeLbl;
     private javax.swing.JTable confidentialTbl;
     private javax.swing.JButton confidentialUpdateBtn;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
